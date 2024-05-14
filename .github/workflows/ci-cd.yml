@@ -13,22 +13,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          ref: main  # Optionally specify the branch or tag to checkout
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'  # Use Node.js version 14 (or later) as per GitHub's recommendation
+          ref: main  # Specify the branch or tag to checkout
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.12.3'  # Specify your Python version
+          python-version: '3.x'  # Specify your Python version
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "requirements.txt not found. Skipping installation of dependencies."
+          fi
 
       - name: Deploy to Google Cloud
         env:
@@ -44,6 +43,9 @@ jobs:
           FIREBASE_ADMIN_TYPE: ${{ secrets.FIREBASE_ADMIN_TYPE }}
           FIREBASE_ADMIN_UNIVERSE_DOMAIN: ${{ secrets.FIREBASE_ADMIN_UNIVERSE_DOMAIN }}
         run: |
+          if [ -f key.pem ]; then
+            rm key.pem  # Remove existing key.pem file if present
+          fi
           echo "$PRIVATE_KEY" | tr -d '\r' > key.pem
           gcloud auth activate-service-account --key-file=key.pem
           # Additional deployment steps using Google Cloud SDK
