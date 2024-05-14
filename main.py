@@ -1,9 +1,13 @@
+from decouple import config
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from firebase_admin import auth, credentials, initialize_app
 
+# Obtén el valor de la variable de entorno FIREBASE_ADMIN_SDK_JSON
+firebase_credentials_json = config('FIREBASE_ADMIN_SDK_JSON')
+
 # Initialize Firebase Admin SDK
-firebase_credentials = credentials.Certificate("./firebaseAdminSDKPython.json")
+firebase_credentials = credentials.Certificate(firebase_credentials_json)
 firebase_app = initialize_app(firebase_credentials)
 
 app = FastAPI()
