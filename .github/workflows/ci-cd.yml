@@ -31,20 +31,13 @@ jobs:
 
       - name: Deploy to Google Cloud
         env:
-          FIREBASE_ADMIN_CLIENT_EMAIL: ${{ secrets.FIREBASE_ADMIN_CLIENT_EMAIL }}
-          FIREBASE_ADMIN_PRIVATE_KEY: ${{ secrets.FIREBASE_ADMIN_PRIVATE_KEY }}
-          FIREBASE_ADMIN_PROJECT_ID: ${{ secrets.FIREBASE_ADMIN_PROJECT_ID }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account-key.json
         run: |
-          if [ -f key.pem ]; then
-            rm key.pem  # Remove existing key.pem file if present
-          fi
-          echo "$PRIVATE_KEY" | tr -d '\r' > key.pem
-          cat key.pem  # Output contents of key.pem for debugging
-          echo "FIREBASE_ADMIN_CLIENT_EMAIL: ${FIREBASE_ADMIN_CLIENT_EMAIL}"  # Debug statement
-          gcloud auth activate-service-account --key-file=key.pem --account="${FIREBASE_ADMIN_CLIENT_EMAIL}"
+          echo "$PRIVATE_KEY" | base64 -d > service-account-key.json
+          gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
           # Additional deployment steps using Google Cloud SDK
 
       # Cleanup temporary files
       - name: Cleanup
         run: |
-          rm key.pem
+          rm service-account-key.json
