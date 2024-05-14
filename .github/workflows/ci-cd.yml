@@ -39,6 +39,8 @@ jobs:
             rm key.pem  # Remove existing key.pem file if present
           fi
           echo "$PRIVATE_KEY" | tr -d '\r' > key.pem
+          cat key.pem  # Output contents of key.pem for debugging
+          echo "FIREBASE_ADMIN_CLIENT_EMAIL: ${FIREBASE_ADMIN_CLIENT_EMAIL}"  # Debug statement
           gcloud auth activate-service-account --key-file=key.pem --account="${FIREBASE_ADMIN_CLIENT_EMAIL}"
           # Additional deployment steps using Google Cloud SDK
 
