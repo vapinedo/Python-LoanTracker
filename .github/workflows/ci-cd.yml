@@ -29,11 +29,15 @@ jobs:
             echo "requirements.txt not found. Skipping installation of dependencies."
           fi
 
+      - name: Generate and Debug JSON Key File
+        run: |
+          echo "$PRIVATE_KEY" | base64 -d > service-account-key.json
+          cat service-account-key.json  # Output contents of the JSON key file for debugging
+
       - name: Deploy to Google Cloud
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account-key.json
         run: |
-          echo "$PRIVATE_KEY" | base64 -d > service-account-key.json
           gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
           # Additional deployment steps using Google Cloud SDK
 
