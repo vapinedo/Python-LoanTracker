@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # Use Node.js version 14 (or later) as per GitHub's recommendation
+          node-version: '20'  # Use Node.js version 14 (or later) as per GitHub's recommendation
 
       - name: Set up Python
         uses: actions/setup-python@v2
