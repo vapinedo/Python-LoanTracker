@@ -44,7 +44,7 @@ jobs:
           gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
           # Additional deployment steps using Google Cloud SDK
 
-      # Cleanup temporary files
+      # Cleanup temporary files.
       - name: Cleanup
         run: |
           rm service-account-key.json
